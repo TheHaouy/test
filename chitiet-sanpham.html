@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm - LittleFish Beauty Mỹ Phẩm Thiên Nhiên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2d5016;
+            --secondary-green: #4a7c59;
+            --light-green: #6b8e23;
+            --accent-green: #9acd32;
+            --light-bg: #f0f8e8;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)) !important;
+            box-shadow: 0 2px 15px rgba(45, 80, 22, 0.2);
+            padding: 10px 0;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Lobster', cursive;
+        }
+
+        .navbar-brand img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--accent-green) !important;
+        }
+
+        .btn-outline-primary {
+            border-color: white;
+            color: white;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: white;
+            color: var(--primary-green);
+        }
+
+        .btn-outline-secondary {
+            border-color: white;
+            color: white;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: white;
+            color: var(--primary-green);
+        }
+
+        /* Search functionality styles */
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 350px;
+        }
+
+        .search-input {
+            border-radius: 20px;
+            border: 1px solid var(--accent-green);
+            padding: 8px 15px 8px 15px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            height: 38px;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.15rem rgba(45, 80, 22, 0.2);
+            outline: none;
+        }
+
+        .search-btn {
+            border-radius: 50%;
+            width: 46px;
+            height: 38px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background-color: var(--accent-green);
+            color: white;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-green);
+            color: white;
+            transform: none;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background-color 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--light-bg);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-category {
+            font-size: 0.8rem;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .search-history {
+            background-color: #f8f9fa;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            color: #666;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-history-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .history-item {
+            display: inline-block;
+            background: white;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .history-item:hover {
+            background-color: var(--light-bg);
+            border-color: var(--accent-green);
+        }
+
+        .clear-history {
+            color: var(--primary-green);
+            font-size: 0.8rem;
+            cursor: pointer;
+            float: right;
+        }
+
+        .clear-history:hover {
+            text-decoration: underline;
+        }
+
+        /* Advanced search dropdown */
+        .search-filters {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--accent-green);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.15);
+            z-index: 999;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-green);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 0.15rem rgba(154, 205, 50, 0.2);
+            outline: none;
+        }
+
+        .price-slider-container {
+            margin-top: 10px;
+        }
+
+        .price-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 10px 0;
+        }
+
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .price-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .price-display {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+        .filter-buttons {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            text-align: right;
+        }
+
+        .filter-buttons .btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-buttons .btn-outline-secondary {
+            border-color: #d0d0d0;
+            color: #666;
+        }
+
+        .filter-buttons .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .advanced-search-btn {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            text-decoration: none;
+            margin-left: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .advanced-search-btn:hover {
+            text-decoration: underline;
+            color: var(--light-green);
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.15);
+            border-radius: 10px;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light-bg);
+            color: var(--primary-green);
+        }
+
+        /* Mobile responsive for search */
+        @media (max-width: 768px) {
+            .search-container {
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .search-input {
+                font-size: 0.85rem;
+                height: 36px;
+                padding: 6px 12px;
+            }
+
+            .search-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 0.75rem;
+            }
+
+            .advanced-search-btn {
+                font-size: 0.75rem;
+                margin-left: 8px;
+            }
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-dark);
+        }
+
+        /* Product Detail Section */
+        .product-detail-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(45, 80, 22, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .product-images {
+            position: sticky;
+            top: 20px;
+        }
+
+        .main-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            opacity: 1;
+            border-color: var(--accent-green);
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .rating-stars {
+            color: #ffd700;
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .rating-count {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .product-price {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+
+        .current-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--secondary-green);
+        }
+
+
+
+        .product-specs {
+            background: white;
+            border: 2px solid var(--light-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .specs-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: var(--primary-green);
+            flex: 1;
+        }
+
+        .spec-value {
+            color: var(--text-dark);
+            flex: 2;
+            text-align: right;
+        }
+
+        .product-description {
+            margin-bottom: 30px;
+        }
+
+        .description-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .description-text {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* Product Options Styles */
+        .product-options {
+            margin-bottom: 25px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: block;
+        }
+
+        .option-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .option-item {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .option-item:hover {
+            border-color: var(--accent-green);
+            background: var(--light-bg);
+        }
+
+        .option-item.active {
+            border-color: var(--secondary-green);
+            background: var(--secondary-green);
+            color: white;
+            font-weight: bold;
+        }
+
+        .option-item.disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        .option-item.disabled:hover {
+            border-color: #ddd;
+            background: #f5f5f5;
+        }
+
+        .quantity-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            color: var(--primary-green);
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 160px;
+        }
+
+        .quantity-btn {
+            background: var(--accent-green);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .quantity-btn:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .quantity-btn:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-green);
+        }
+
+        .quantity-input {
+            border: none;
+            text-align: center;
+            width: 60px;
+            height: 40px;
+            font-weight: bold;
+            font-size: 1rem;
+            border-top: 2px solid var(--accent-green);
+            border-bottom: 2px solid var(--accent-green);
+            outline: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-add-to-cart {
+            flex: 2;
+            background: var(--secondary-green);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover {
+            background: var(--primary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.3);
+        }
+
+        .btn-buy-now {
+            flex: 1;
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-buy-now:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Product Details Section */
+        .product-details-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(45, 80, 22, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        /* Suggested Products Section */
+        .suggested-products-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(45, 80, 22, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .suggested-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .suggested-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-green);
+            border-radius: 2px;
+        }
+
+        .suggested-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .suggested-product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(45, 80, 22, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .suggested-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .suggested-product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .suggested-product-info {
+            padding: 20px;
+        }
+
+        .suggested-product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .suggested-product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary-green);
+            margin-bottom: 10px;
+        }
+
+        .suggested-product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .suggested-rating-stars {
+            color: #ffd700;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-green), #1a3009);
+            color: white;
+            padding: 15px 0;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-section {
+                padding: 20px;
+            }
+
+            .product-title {
+                font-size: 1.5rem;
+            }
+
+            .current-price {
+                font-size: 1.4rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn-add-to-cart,
+            .btn-buy-now {
+                flex: none;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            .quantity-controls {
+                max-width: 140px;
+            }
+
+            .quantity-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .quantity-input {
+                width: 50px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+
+            .option-items {
+                gap: 8px;
+            }
+
+            .option-item {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                min-width: 50px;
+            }
+
+            .suggested-products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .suggested-product-image {
+                height: 180px;
+            }
+
+            .product-details-section,
+            .suggested-products-section {
+                padding: 25px;
+            }
+
+            .details-tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="trangchu.html">
+                <img src="logomoi (2).png" alt="LittleFish Beauty Logo">
+                LittleFish Beauty
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="search-container ms-3">
+                    <div class="position-relative">
+                        <div class="search-wrapper">
+                            <div class="search-form">
+                                <input class="form-control search-input" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" id="searchInput">
+                                <button class="btn search-btn" type="button" id="searchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search suggestions dropdown -->
+                        <div class="search-suggestions" id="searchSuggestions">
+                            <div class="search-history" id="searchHistory">
+                                <div class="search-history-title">Tìm kiếm gần đây <span class="clear-history" id="clearHistory">Xóa</span></div>
+                                <div id="historyItems"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="Trangchu.html">Trang chủ</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Danh mục sản phẩm</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#" data-category="skincare">Chăm sóc da</a></li>
+                            <li><a class="dropdown-item" href="#" data-category="makeup">Trang điểm</a></li>
+                            <li><a class="dropdown-item" href="#" data-category="haircare">Dưỡng tóc</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" data-category="suncare">Chống nắng</a></li>
+                            <li><a class="dropdown-item" href="#" data-category="essential-oils">Tinh dầu</a></li>
+                            <li><a class="dropdown-item" href="#" data-category="body-care">Chăm sóc cơ thể</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+                </ul>
+                <div class="ms-3">
+                    <a href="#" class="btn btn-outline-primary">Giỏ hàng 🛒</a>
+                    <a href="#" class="btn btn-outline-secondary">Tài khoản 👤</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="Trangchu.html">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="sanpham.html">Sản phẩm</a></li>
+                <li class="breadcrumb-item"><a href="sanpham.html">Chăm sóc da</a></li>
+                <li class="breadcrumb-item active" id="breadcrumbProduct">Tên sản phẩm</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Product Detail -->
+    <div class="container">
+        <div class="product-detail-section">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-images">
+                        <img id="mainImage" src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Product Image" class="main-image">
+                        <div class="thumbnail-images">
+                            <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Thumbnail 1" class="thumbnail active" onclick="changeMainImage(this.src)">
+                            <img src="https://images.unsplash.com/photo-1556229010-e5ac1b9e5e47?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Thumbnail 2" class="thumbnail" onclick="changeMainImage(this.src)">
+                            <img src="https://images.unsplash.com/photo-1585652757141-032b1374cf12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Thumbnail 3" class="thumbnail" onclick="changeMainImage(this.src)">
+                            <img src="https://images.unsplash.com/photo-1586595299850-88fb7d7fa2b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Thumbnail 4" class="thumbnail" onclick="changeMainImage(this.src)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-badge" id="productBadge">Yêu Thích</div>
+                    <h1 class="product-title" id="productTitle">[DAILY] Nước Tẩy Trang Garnier Làm Sạch Sâu Dịu Nhẹ Cho Mọi Loại Da 400ml</h1>
+                    <div class="product-rating">
+                        <div class="rating-stars" id="productRating">⭐⭐⭐⭐⭐</div>
+                        <span class="rating-count" id="productRatingCount">4.9 (28.5k Đánh Giá)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price" id="productCurrentPrice">155.000₫</span>
+                    </div>
+
+                    <!-- Product Options -->
+                    <div class="product-options" id="productOptions">
+                        <!-- Tùy chọn sẽ được tạo động bằng JavaScript -->
+                    </div>
+
+                    <div class="quantity-section">
+                        <div class="quantity-label">Số Lượng</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="productQuantity" class="quantity-input" value="1" min="1" max="99">
+                            <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-add-to-cart" onclick="addToCart()">
+                                <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ Hàng
+                            </button>
+                            <button class="btn-buy-now" onclick="buyNow()">
+                                Mua Ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="container">
+        <!-- Chi tiết sản phẩm -->
+        <div class="product-details-section">
+            <div class="product-specs">
+                <h6 class="specs-title">CHI TIẾT SẢN PHẨM</h6>
+                <div class="spec-row">
+                    <span class="spec-label">Danh Mục</span>
+                    <span class="spec-value" id="productCategory">Chăm sóc da</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Thương hiệu</span>
+                    <span class="spec-value" id="productBrand">Garnier</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Hạn sử dụng</span>
+                    <span class="spec-value" id="productExpiry">3 Năm kể từ ngày sản xuất</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Xuất sứ</span>
+                    <span class="spec-value" id="productOrigin">Indonesia / China</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Thành phần chính</span>
+                    <span class="spec-value" id="productIngredients">Aqua, Glycerin, PEG-6 Caprylic/Capric Glycerides</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Cách sử dụng</span>
+                    <span class="spec-value" id="productUsage">Thoa lên mặt, massage nhẹ và rửa sạch với nước</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mô tả sản phẩm -->
+        <div class="product-details-section">
+            <div class="product-description">
+                <h6 class="description-title">MÔ TẢ SẢN PHẨM</h6>
+                <p class="description-text" id="productDescription">
+                    Nước Làm Sạch Và Tẩy Trang Cho Mọi Loại Da Garnier Micellar Cleansing Water 400ml hiện đã có mặt tại Hasaki với 4 phân loại dành cho từng vấn đề da riêng biệt. 
+                    Lưu Ý: Hiện Hasaki đang bán sông còn đã 2 màu cũ và mới. Sản phẩm với công thức dịu nhẹ, không gây kích ứng, phù hợp với mọi loại da kể cả da nhạy cảm. 
+                    Giúp làm sạch sâu lỗ chân lông, loại bỏ bụi bẩn và trang điểm một cách hiệu quả mà không làm khô da.
+                </p>
+                <div class="description-text">
+                    <h6 style="color: var(--primary-green); font-weight: 600; margin-top: 20px;">Lợi ích chính:</h6>
+                    <ul style="color: #666; line-height: 1.8;">
+                        <li>Làm sạch sâu lỗ chân lông</li>
+                        <li>Loại bỏ bụi bẩn và trang điểm hiệu quả</li>
+                        <li>Không làm khô da sau khi sử dụng</li>
+                        <li>Phù hợp với mọi loại da, kể cả da nhạy cảm</li>
+                        <li>Công thức dịu nhẹ, không gây kích ứng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đánh giá sản phẩm -->
+        <div class="product-details-section">
+            <div class="product-reviews">
+                <h6 class="description-title">ĐÁNH GIÁ SẢN PHẨM</h6>
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; color: var(--accent-green);"></i>
+                    <p>Chức năng đánh giá sẽ được cập nhật sớm!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggested Products Section -->
+    <div class="container">
+        <div class="suggested-products-section">
+            <h2 class="suggested-title">Sản Phẩm Gợi Ý</h2>
+            <div class="suggested-products-grid" id="suggestedProductsGrid">
+                <!-- Sản phẩm gợi ý sẽ được tạo động bằng JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="logomoi (2).png" alt="LittleFish Beauty Logo" style="width: 60px; height: 60px; object-fit: cover; margin-right: 25px;">
+                        <h5 class="text-white fw-bold mb-0" style="font-family: 'Lobster', cursive;">LittleFish Beauty</h5>
+                    </div>
+                    <p class="text-light">Mỹ phẩm thiên nhiên chất lượng cao, an toàn cho làn da của bạn.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="text-white fw-bold mb-3">Danh mục</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Chăm sóc da</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Trang điểm</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Dưỡng tóc</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Sản phẩm mới</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="text-white fw-bold mb-3">Hỗ trợ</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Liên hệ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Chính sách</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Vận chuyển</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Đổi trả</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-white fw-bold mb-3">Thông tin liên hệ</h6>
+                    <p class="text-light mb-2"><i class="fas fa-map-marker-alt me-2"></i>90 Đ.13, Tân Quy, Quận 7, TP.HCM</p>
+                    <p class="text-light mb-2"><i class="fas fa-phone me-2"></i>038 844 2230</p>
+                    <p class="text-light mb-2"><i class="fas fa-envelope me-2"></i>mr.nghiaenglish2230@littlefish.com</p>
+                </div>
+            </div>
+            <hr class="text-light">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-light mb-0">&copy; 2025 LittleFish Beauty. Tất cả quyền được bảo lưu.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Dữ liệu sản phẩm
+        const productData = {
+            1: {
+                title: "Kem Dưỡng Ẩm Thiên Nhiên",
+                badge: "Bán Chạy",
+                rating: "⭐⭐⭐⭐⭐",
+                ratingCount: "4.8 (1.2k Đánh Giá)",
+                currentPrice: "120.000₫",
+                category: "skincare",
+                categoryName: "Chăm sóc da",
+                brand: "Nature Beauty",
+                expiry: "3 Năm kể từ ngày sản xuất",
+                origin: "Việt Nam",
+                ingredients: "Aloe Vera, Vitamin E, Hyaluronic Acid",
+                usage: "Thoa đều lên mặt và cổ sau khi làm sạch da",
+                description: "Kem dưỡng ẩm thiên nhiên từ chiết xuất lô hội và vitamin E, giúp cung cấp độ ẩm tối ưu cho da, làm da mềm mại và tươi trẻ. Sản phẩm không chứa paraben, phù hợp với mọi loại da kể cả da nhạy cảm. Được chiết xuất từ những thành phần tự nhiên an toàn nhất.",
+                image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Loại da": ["Da khô", "Da dầu", "Da hỗn hợp", "Da nhạy cảm"],
+                    "Dung tích": ["50ml", "100ml", "150ml"]
+                }
+            },
+            2: {
+                title: "Serum Vitamin C Dưỡng Sáng",
+                badge: "Mới Ra Mắt",
+                rating: "⭐⭐⭐⭐⭐",
+                ratingCount: "4.9 (850 Đánh Giá)",
+                currentPrice: "125.000₫",
+                category: "skincare",
+                categoryName: "Chăm sóc da",
+                brand: "Vitamin Plus",
+                expiry: "2 Năm kể từ ngày sản xuất",
+                origin: "Hàn Quốc",
+                ingredients: "Vitamin C 20%, Niacinamide, Hyaluronic Acid",
+                usage: "Sử dụng vào buổi sáng, thoa 2-3 giọt lên da đã được làm sạch",
+                description: "Serum vitamin C cô đặc 20% giúp dưỡng sáng da, mờ thâm nám và chống lão hóa hiệu quả. Công thức ổn định không gây kích ứng, thẩm thấu nhanh vào da và mang lại hiệu quả tức thì. Phù hợp sử dụng hàng ngày cho làn da tươi sáng rạng rỡ.",
+                image: "https://images.unsplash.com/photo-1556229010-e5ac1b9e5e47?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Nồng độ": ["10%", "15%", "20%"],
+                    "Dung tích": ["30ml", "50ml"]
+                }
+            },
+            3: {
+                title: "Sữa Rửa Mặt Trà Xanh",
+                badge: "Giảm Giá",
+                rating: "⭐⭐⭐⭐",
+                ratingCount: "4.5 (670 Đánh Giá)",
+                currentPrice: "77.000₫",
+                category: "skincare",
+                categoryName: "Chăm sóc da",
+                brand: "Green Tea Beauty",
+                expiry: "3 Năm kể từ ngày sản xuất",
+                origin: "Nhật Bản",
+                ingredients: "Green Tea Extract, Salicylic Acid, Glycerin",
+                usage: "Massage nhẹ nhàng lên da ướt, tạo bọt và rửa sạch",
+                description: "Sữa rửa mặt từ chiết xuất trà xanh tự nhiên, làm sạch sâu lỗ chân lông, kiểm soát dầu thừa và mang lại cảm giác tươi mát cho da. Phù hợp với da dầu và da hỗn hợp. Công thức nhẹ nhàng không làm khô da sau khi sử dụng.",
+                image: "https://images.unsplash.com/photo-1585652757141-032b1374cf12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Loại da": ["Da dầu", "Da hỗn hợp", "Da thường"],
+                    "Dung tích": ["100ml", "200ml", "300ml"]
+                }
+            },
+            4: {
+                title: "Mặt Nạ Mật Ong Organic",
+                badge: "Organic",
+                rating: "⭐⭐⭐⭐⭐",
+                ratingCount: "4.7 (450 Đánh Giá)",
+                currentPrice: "288.000₫",
+                category: "skincare",
+                categoryName: "Chăm sóc da",
+                brand: "Honey Care",
+                expiry: "18 Tháng kể từ ngày sản xuất",
+                origin: "New Zealand",
+                ingredients: "Manuka Honey, Royal Jelly, Propolis",
+                usage: "Thoa đều lên mặt, để 15-20 phút rồi rửa sạch",
+                description: "Mặt nạ từ mật ong Manuka nguyên chất, cung cấp dưỡng chất và độ ẩm cho da, giúp phục hồi da hư tổn và mang lại độ mềm mại tự nhiên. Thành phần 100% organic, không chứa hóa chất độc hại, an toàn cho mọi loại da.",
+                image: "https://images.unsplash.com/photo-1586595299850-88fb7d7fa2b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Loại mật ong": ["Manuka", "Wildflower", "Acacia"],
+                    "Dung tích": ["50ml", "100ml"]
+                }
+            },
+            5: {
+                title: "Kem Chống Nắng SPF 50+",
+                badge: "Bảo Vệ Tối Ưu",
+                rating: "⭐⭐⭐⭐⭐",
+                ratingCount: "4.8 (950 Đánh Giá)",
+                currentPrice: "180.000₫",
+                category: "suncare",
+                categoryName: "Chống nắng",
+                brand: "Sun Protection",
+                expiry: "3 Năm kể từ ngày sản xuất",
+                origin: "Pháp",
+                ingredients: "Zinc Oxide, Titanium Dioxide, Vitamin E",
+                usage: "Thoa đều 15-30 phút trước khi ra ngoài",
+                description: "Kem chống nắng với SPF 50+ cung cấp khả năng bảo vệ tối ưu khỏi tia UVA và UVB. Công thức nhẹ không nhờn, không để lại vết trắng, phù hợp cho cả gia đình.",
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Loại da": ["Da khô", "Da dầu", "Da nhạy cảm"],
+                    "SPF": ["30", "50", "50+"]
+                }
+            },
+            6: {
+                title: "Son Tint Tự Nhiên",
+                badge: "Hot Trend",
+                rating: "⭐⭐⭐⭐⭐",
+                ratingCount: "4.9 (1.5k Đánh Giá)",
+                currentPrice: "89.000₫",
+                category: "makeup",
+                categoryName: "Trang điểm",
+                brand: "Natural Beauty",
+                expiry: "2 Năm kể từ ngày sản xuất",
+                origin: "Hàn Quốc",
+                ingredients: "Natural Wax, Vitamin E, Plant Extract",
+                usage: "Thoa nhẹ lên môi để tạo màu tự nhiên",
+                description: "Son tint từ thành phần tự nhiên, lên màu đẹp, lâu trôi và dưỡng ẩm cho môi. Không chứa chất bảo quản có hại, an toàn khi sử dụng hàng ngày.",
+                image: "https://images.unsplash.com/photo-1586521995568-39abaa0c2311?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                options: {
+                    "Màu sắc": ["B1 - Hồng Nhẹ", "B2 - Đỏ Cam", "B3 - Đỏ Tươi", "B4 - Nâu Đất"],
+                    "Độ bóng": ["Matte", "Glossy", "Satin"]
+                }
+            }
+        };
+
+        // Lấy ID sản phẩm từ URL
+        function getProductIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id') || '1';
+        }
+
+        // Load thông tin sản phẩm
+        function loadProductInfo() {
+            const productId = getProductIdFromURL();
+            const product = productData[productId];
+            
+            if (product) {
+                document.getElementById('productTitle').textContent = product.title;
+                document.getElementById('breadcrumbProduct').textContent = product.title;
+                document.getElementById('productBadge').textContent = product.badge;
+                document.getElementById('productRating').textContent = product.rating;
+                document.getElementById('productRatingCount').textContent = product.ratingCount;
+                document.getElementById('productCurrentPrice').textContent = product.currentPrice;
+                document.getElementById('productCategory').textContent = product.categoryName;
+                document.getElementById('productBrand').textContent = product.brand;
+                document.getElementById('productExpiry').textContent = product.expiry;
+                document.getElementById('productOrigin').textContent = product.origin;
+                document.getElementById('productIngredients').textContent = product.ingredients;
+                document.getElementById('productUsage').textContent = product.usage;
+                document.getElementById('productDescription').textContent = product.description;
+                document.getElementById('mainImage').src = product.image;
+                
+                // Load product options
+                loadProductOptions(product.options);
+                
+                // Load suggested products
+                loadSuggestedProducts(product.category, productId);
+                
+                // Update page title
+                document.title = product.title + ' - LittleFish Beauty Mỹ Phẩm Thiên Nhiên';
+            }
+        }
+
+        // Load tùy chọn sản phẩm
+        function loadProductOptions(options) {
+            const optionsContainer = document.getElementById('productOptions');
+            optionsContainer.innerHTML = '';
+            
+            if (!options) return;
+            
+            Object.keys(options).forEach(optionName => {
+                const optionGroup = document.createElement('div');
+                optionGroup.className = 'option-group';
+                
+                const optionLabel = document.createElement('label');
+                optionLabel.className = 'option-label';
+                optionLabel.textContent = optionName + ':';
+                
+                const optionItems = document.createElement('div');
+                optionItems.className = 'option-items';
+                
+                options[optionName].forEach((value, index) => {
+                    const optionItem = document.createElement('div');
+                    optionItem.className = 'option-item' + (index === 0 ? ' active' : '');
+                    optionItem.textContent = value;
+                    optionItem.onclick = () => selectOption(optionItem, optionName);
+                    optionItems.appendChild(optionItem);
+                });
+                
+                optionGroup.appendChild(optionLabel);
+                optionGroup.appendChild(optionItems);
+                optionsContainer.appendChild(optionGroup);
+            });
+        }
+
+        // Chọn tùy chọn sản phẩm
+        function selectOption(selectedItem, optionName) {
+            const optionItems = selectedItem.parentNode.querySelectorAll('.option-item');
+            optionItems.forEach(item => item.classList.remove('active'));
+            selectedItem.classList.add('active');
+        }
+
+        // Load sản phẩm gợi ý
+        function loadSuggestedProducts(category, currentProductId) {
+            const suggestedContainer = document.getElementById('suggestedProductsGrid');
+            suggestedContainer.innerHTML = '';
+            
+            // Lọc sản phẩm cùng danh mục, loại trừ sản phẩm hiện tại
+            const suggestedProducts = Object.entries(productData)
+                .filter(([id, product]) => product.category === category && id !== currentProductId)
+                .slice(0, 4); // Chỉ hiển thị tối đa 4 sản phẩm
+            
+            // Nếu không đủ sản phẩm cùng danh mục, thêm sản phẩm từ danh mục khác
+            if (suggestedProducts.length < 4) {
+                const otherProducts = Object.entries(productData)
+                    .filter(([id, product]) => product.category !== category && id !== currentProductId)
+                    .slice(0, 4 - suggestedProducts.length);
+                suggestedProducts.push(...otherProducts);
+            }
+            
+            suggestedProducts.forEach(([id, product]) => {
+                const productCard = document.createElement('div');
+                productCard.className = 'suggested-product-card';
+                productCard.onclick = () => {
+                    window.location.href = `chitiet-sanpham.html?id=${id}`;
+                };
+                
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}" class="suggested-product-image">
+                    <div class="suggested-product-info">
+                        <h3 class="suggested-product-title">${product.title}</h3>
+                        <div class="suggested-product-price">${product.currentPrice}</div>
+                        <div class="suggested-product-rating">
+                            <span class="suggested-rating-stars">${product.rating.substring(0, 5)}</span>
+                            <span>${product.ratingCount.split(' ')[0]}</span>
+                        </div>
+                    </div>
+                `;
+                
+                suggestedContainer.appendChild(productCard);
+            });
+        }
+
+        // Thay đổi hình ảnh chính
+        function changeMainImage(src) {
+            document.getElementById('mainImage').src = src;
+            
+            // Cập nhật thumbnail active
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+                if (thumb.src === src) {
+                    thumb.classList.add('active');
+                }
+            });
+        }
+
+        // Điều khiển số lượng
+        function increaseQuantity() {
+            const input = document.getElementById('productQuantity');
+            let value = parseInt(input.value);
+            if (value < 99) {
+                input.value = value + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('productQuantity');
+            let value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+
+        // Thêm vào giỏ hàng
+        function addToCart() {
+            const quantity = document.getElementById('productQuantity').value;
+            const productTitle = document.getElementById('productTitle').textContent;
+            
+            alert(`Đã thêm ${quantity} x "${productTitle}" vào giỏ hàng!`);
+        }
+
+        // Mua ngay
+        function buyNow() {
+            const quantity = document.getElementById('productQuantity').value;
+            const productTitle = document.getElementById('productTitle').textContent;
+            
+            alert(`Mua ngay ${quantity} x "${productTitle}". Chuyển đến trang thanh toán...`);
+        }
+
+        // Load thông tin khi trang được tải
+        document.addEventListener('DOMContentLoaded', loadProductInfo);
+
+        // Search functionality
+        const products = [
+            { name: "Kem dưỡng ẩm thiên nhiên", category: "skincare", price: 200000, description: "Kem dưỡng ẩm từ chiết xuất lô hội" },
+            { name: "Serum vitamin C", category: "skincare", price: 250000, description: "Serum dưỡng sáng da tự nhiên" },
+            { name: "Sữa rửa mặt trà xanh", category: "skincare", price: 180000, description: "Làm sạch da từ chiết xuất trà xanh" },
+            { name: "Mặt nạ mật ong", category: "skincare", price: 320000, description: "Mặt nạ dưỡng ẩm từ mật ong organic" },
+            { name: "Toner hoa hồng", category: "skincare", price: 150000, description: "Cân bằng độ pH da từ hoa hồng tự nhiên" },
+            { name: "Kem chống nắng SPF50", category: "suncare", price: 280000, description: "Bảo vệ da khỏi tia UV hiệu quả" },
+            { name: "Dầu massage thiên nhiên", category: "essential-oils", price: 350000, description: "Thư giãn cơ thể với tinh dầu tự nhiên" },
+            { name: "Son dưỡng môi organic", category: "makeup", price: 120000, description: "Dưỡng ẩm môi từ sáp ong tự nhiên" }
+        ];
+
+        // Quản lý lịch sử tìm kiếm
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        
+        // Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+        const searchFilters = document.getElementById('searchFilters');
+        const advancedSearchToggle = document.getElementById('advancedSearchToggle');
+        const priceSlider = document.getElementById('priceSlider');
+        const priceValue = document.getElementById('priceValue');
+
+        // Update price display when slider changes
+        if (priceSlider && priceValue) {
+            priceSlider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                priceValue.textContent = value.toLocaleString('vi-VN') + '₫';
+            });
+        }
+
+        // Hiển thị gợi ý tìm kiếm
+        function showSearchSuggestions(query = '') {
+            if (!searchSuggestions) return;
+            
+            searchSuggestions.innerHTML = '';
+            
+            // Hiển thị lịch sử nếu không có query
+            if (!query.trim()) {
+                const historyDiv = document.createElement('div');
+                historyDiv.className = 'search-history';
+                historyDiv.innerHTML = `
+                    <div class="search-history-title">
+                        Tìm kiếm gần đây 
+                        <span class="clear-history" onclick="clearSearchHistory()">Xóa</span>
+                    </div>
+                    <div id="historyItemsInner"></div>
+                `;
+                searchSuggestions.appendChild(historyDiv);
+                
+                const historyItemsInner = document.getElementById('historyItemsInner');
+                searchHistory.slice(-5).reverse().forEach(term => {
+                    const historyItem = document.createElement('span');
+                    historyItem.className = 'history-item';
+                    historyItem.textContent = term;
+                    historyItem.onclick = () => {
+                        searchInput.value = term;
+                        performSearch(term);
+                        hideSearchSuggestions();
+                    };
+                    historyItemsInner.appendChild(historyItem);
+                });
+            } else {
+                // Hiển thị gợi ý sản phẩm
+                const filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(query.toLowerCase()) ||
+                    product.description.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 8);
+
+                filteredProducts.forEach(product => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'suggestion-item';
+                    suggestionItem.innerHTML = `
+                        <div><strong>${product.name}</strong></div>
+                        <div class="suggestion-category">${getCategoryName(product.category)} • ${formatPrice(product.price)}</div>
+                    `;
+                    suggestionItem.onclick = () => {
+                        searchInput.value = product.name;
+                        performSearch(product.name);
+                        hideSearchSuggestions();
+                    };
+                    searchSuggestions.appendChild(suggestionItem);
+                });
+
+                // Thêm gợi ý danh mục
+                const categories = [...new Set(filteredProducts.map(p => p.category))];
+                if (categories.length > 0) {
+                    categories.forEach(category => {
+                        const categoryItem = document.createElement('div');
+                        categoryItem.className = 'suggestion-item';
+                        categoryItem.innerHTML = `
+                            <div><i class="fas fa-tag"></i> Xem tất cả trong <strong>${getCategoryName(category)}</strong></div>
+                        `;
+                        categoryItem.onclick = () => {
+                            filterByCategory(category);
+                            hideSearchSuggestions();
+                        };
+                        searchSuggestions.appendChild(categoryItem);
+                    });
+                }
+            }
+            
+            searchSuggestions.style.display = 'block';
+        }
+
+        function hideSearchSuggestions() {
+            if (searchSuggestions) {
+                searchSuggestions.style.display = 'none';
+            }
+        }
+
+        function getCategoryName(category) {
+            const categoryNames = {
+                'skincare': 'Chăm sóc da',
+                'makeup': 'Trang điểm',
+                'haircare': 'Dưỡng tóc',
+                'suncare': 'Chống nắng',
+                'essential-oils': 'Tinh dầu',
+                'body-care': 'Chăm sóc cơ thể'
+            };
+            return categoryNames[category] || category;
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
+        }
+
+        // Thực hiện tìm kiếm
+        function performSearch(query) {
+            if (query.trim()) {
+                // Lưu vào lịch sử
+                if (!searchHistory.includes(query)) {
+                    searchHistory.push(query);
+                    if (searchHistory.length > 10) {
+                        searchHistory.shift();
+                    }
+                    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                }
+                
+                // Redirect to products page with search query
+                window.location.href = `sanpham.html?search=${encodeURIComponent(query)}`;
+            }
+            hideSearchSuggestions();
+        }
+
+        function getSearchResults(query) {
+            return products.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase()) ||
+                product.description.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+
+        function filterByCategory(category) {
+            window.location.href = `sanpham.html?category=${category}`;
+        }
+
+        function clearSearchHistory() {
+            searchHistory = [];
+            localStorage.removeItem('searchHistory');
+            hideSearchSuggestions();
+        }
+
+        // Event listeners
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                showSearchSuggestions(query);
+            });
+
+            searchInput.addEventListener('focus', () => {
+                showSearchSuggestions(searchInput.value);
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch(searchInput.value);
+                    hideSearchSuggestions();
+                }
+            });
+        }
+
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                performSearch(searchInput.value);
+                hideSearchSuggestions();
+            });
+        }
+
+        // Toggle advanced search
+        if (advancedSearchToggle) {
+            advancedSearchToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (searchFilters) {
+                    const isVisible = searchFilters.style.display === 'block';
+                    searchFilters.style.display = isVisible ? 'none' : 'block';
+                    hideSearchSuggestions();
+                }
+            });
+        }
+
+        // Apply filters
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', () => {
+                const category = document.getElementById('categoryFilter').value;
+                const maxPrice = document.getElementById('priceSlider').value;
+                const sortBy = document.getElementById('sortBy').value;
+                
+                let url = 'sanpham.html?';
+                if (category) url += `category=${category}&`;
+                if (maxPrice < 500000) url += `maxPrice=${maxPrice}&`;
+                if (sortBy !== 'relevance') url += `sort=${sortBy}&`;
+                
+                window.location.href = url;
+            });
+        }
+
+        // Category dropdown navigation
+        document.querySelectorAll('[data-category]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = e.target.getAttribute('data-category');
+                window.location.href = `sanpham.html?category=${category}`;
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                hideSearchSuggestions();
+                if (searchFilters) {
+                    searchFilters.style.display = 'none';
+                }
+            }
+        });
+
+        // Ngăn không cho suggestions bị ẩn khi click vào chính nó
+        if (searchSuggestions) {
+            searchSuggestions.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        // Bootstrap dropdown support for categories
+        const categoryDropdown = document.getElementById('categoryDropdown');
+        if (categoryDropdown) {
+            categoryDropdown.addEventListener('show.bs.dropdown', function() {
+                hideSearchSuggestions();
+                if (searchFilters) {
+                    searchFilters.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
