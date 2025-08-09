@@ -1,0 +1,761 @@
+@model LittleFishBeauty.Models.SanPham
+@{
+    ViewData["Title"] = $"{Model?.TenSanPham ?? "Chi tiết sản phẩm"} - LittleFish Beauty Mỹ Phẩm Thiên Nhiên";
+    Layout = "~/Areas/Customer/Views/Shared/_Layout.cshtml";
+    var productId = ViewBag.ProductId ?? 1;
+    var tongSoLuongTonKho = ViewBag.TongSoLuongTonKho ?? 0;
+    var diemTrungBinh = ViewBag.DiemTrungBinh ?? 0;
+    var tongSoDanhGia = ViewBag.TongSoDanhGia ?? 0;
+}
+
+@section Styles {
+    <link href="~/css/chitiet-sanpham.css" rel="stylesheet" asp-append-version="true">
+}
+
+<!-- Breadcrumb -->
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-area="Customer" asp-controller="TrangChu" asp-action="Index">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Customer" asp-controller="SanPham" asp-action="Index">Sản phẩm</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-area="Customer" asp-controller="SanPham" asp-action="Index" asp-route-category="@Model?.DanhMuc?.DuongDanSEO">@Model?.DanhMuc?.TenDanhMuc</a>
+            </li>
+            <li class="breadcrumb-item active">@Model?.TenSanPham</li>
+        </ol>
+    </nav>
+</div>
+
+<!-- Product Detail -->
+<div class="container">
+    <div class="product-detail-section">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product-images">
+                    @{
+                        var defaultImage = "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+                        var anhChinh = defaultImage;
+                        var anhPhu = new List<string>();
+                        
+                        if (Model?.AnhSanPhams != null && Model.AnhSanPhams.Any())
+                        {
+                            var anhChinhObj = Model.AnhSanPhams.FirstOrDefault(a => a.LoaiAnh == "chinh");
+                            if (anhChinhObj != null)
+                            {
+                                anhChinh = anhChinhObj.DuongDan;
+                            }
+                            
+                            anhPhu = Model.AnhSanPhams.Where(a => a.LoaiAnh == "phu").Select(a => a.DuongDan).ToList();
+                            if (anhPhu.Count == 0)
+                            {
+                                anhPhu.Add(anhChinh);
+                            }
+                        }
+                        else
+                        {
+                            anhPhu.Add(defaultImage);
+                        }
+                    }
+                    
+                    <img id="mainImage" src="@anhChinh" alt="@Model?.TenSanPham" class="main-image">
+                    <div class="thumbnail-images">
+                        <img src="@anhChinh" alt="Ảnh chính" class="thumbnail active" onclick="changeMainImage(this.src)">
+                        @foreach (var anh in anhPhu.Take(3))
+                        {
+                            <img src="@anh" alt="Ảnh phụ" class="thumbnail" onclick="changeMainImage(this.src)">
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h1 class="product-title">@Model?.TenSanPham</h1>
+                <div class="product-rating">
+                    <div class="rating-stars">
+                        @if (diemTrungBinh > 0)
+                        {
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Floor(diemTrungBinh))
+                                {
+                                    <span>⭐</span>
+                                }
+                                else if (i <= diemTrungBinh)
+                                {
+                                    <span>⭐</span>
+                                }
+                                else
+                                {
+                                    <span>☆</span>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <span>☆☆☆☆☆</span>
+                        }
+                    </div>
+                    <span class="rating-count">@diemTrungBinh (@tongSoDanhGia.ToString("N0") Đánh Giá)</span>
+                </div>
+                <div class="product-price">
+                    <span class="current-price">@Model?.GiaBan.ToString("N0")₫</span>
+                </div>
+
+                <!-- Product Options -->
+                <div class="product-options" id="productOptions">
+                    <!-- Tùy chọn sẽ được tạo động bằng JavaScript -->
+                </div>
+
+                <form id="addToCartForm">
+                    <div class="quantity-section">
+                        <div class="quantity-label">Số Lượng</div>
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="productQuantity" name="quantity" class="quantity-input" value="1" min="1" max="@tongSoLuongTonKho">
+                            <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                        <div class="stock-info">
+                            @if (tongSoLuongTonKho > 0)
+                            {
+                                <span class="stock-available">Còn @tongSoLuongTonKho sản phẩm</span>
+                            }
+                            else
+                            {
+                                <span class="stock-out">Hết hàng</span>
+                            }
+                        </div>
+
+                        <div class="action-buttons">
+                            @if (tongSoLuongTonKho > 0)
+                            {
+                                <button type="button" class="btn-add-to-cart" onclick="addToCart(@productId)">
+                                    <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ Hàng
+                                </button>
+                                <button type="button" class="btn-buy-now" onclick="buyNow(@productId)">
+                                    Mua Ngay
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn-out-of-stock" disabled>
+                                    Hết Hàng
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Details Section -->
+<div class="container">
+    <!-- Chi tiết sản phẩm -->
+    <div class="product-details-section">
+        <div class="product-specs">
+            <h6 class="specs-title">CHI TIẾT SẢN PHẨM</h6>
+            <div class="spec-row">
+                <span class="spec-label">Danh Mục</span>
+                <span class="spec-value">@Model?.DanhMuc?.TenDanhMuc</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Ngày tạo</span>
+                <span class="spec-value">@Model?.NgayTao.ToString("dd/MM/yyyy")</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Trạng thái</span>
+                <span class="spec-value">@(Model?.TrangThai == true ? "Đang bán" : "Ngừng bán")</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Xuất sứ</span>
+                <span class="spec-value" id="productOrigin">Indonesia / China</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Thành phần chính</span>
+                <span class="spec-value" id="productIngredients">Aqua, Glycerin, PEG-6 Caprylic/Capric Glycerides</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Cách sử dụng</span>
+                <span class="spec-value" id="productUsage">Thoa lên mặt, massage nhẹ và rửa sạch với nước</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mô tả sản phẩm -->
+    <div class="product-details-section">
+        <div class="product-description">
+            <h6 class="description-title">MÔ TẢ SẢN PHẨM</h6>
+            @if (!string.IsNullOrEmpty(Model?.MoTa))
+            {
+                <div class="description-text">
+                    @Html.Raw(Model.MoTa.Replace("\n", "<br />"))
+                </div>
+            }
+            else
+            {
+                <p class="description-text">Chưa có mô tả cho sản phẩm này.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Đánh giá sản phẩm -->
+    <div class="product-details-section">
+        <div class="product-reviews">
+            <h6 class="description-title">ĐÁNH GIÁ SẢN PHẨM</h6>
+            
+            @if (tongSoDanhGia > 0)
+            {
+                <!-- Tổng quan đánh giá -->
+                <div class="review-summary">
+                    <div class="review-summary-left">
+                        <div class="average-rating">@diemTrungBinh</div>
+                        <div class="average-stars">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Floor(diemTrungBinh))
+                                {
+                                    <span>⭐</span>
+                                }
+                                else if (i <= diemTrungBinh)
+                                {
+                                    <span>⭐</span>
+                                }
+                                else
+                                {
+                                    <span>☆</span>
+                                }
+                            }
+                        </div>
+                        <div class="total-reviews">@tongSoDanhGia đánh giá</div>
+                    </div>
+                    <div class="review-summary-right">
+                        <div class="rating-breakdown">
+                            @{
+                                var thongKeSao = ViewBag.ThongKeSao as Dictionary<int, int>;
+                            }
+                            @for (int sao = 5; sao >= 1; sao--)
+                            {
+                                var soLuong = thongKeSao?[sao] ?? 0;
+                                var phanTram = tongSoDanhGia > 0 ? (soLuong * 100.0 / tongSoDanhGia) : 0;
+                                <div class="rating-row">
+                                    <span class="rating-label">@sao ⭐</span>
+                                    <div class="rating-bar">
+                                        <div class="rating-fill" style="width: @(phanTram)%"></div>
+                                    </div>
+                                    <span class="rating-count">@soLuong</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lọc đánh giá -->
+                <div class="review-filters">
+                    <button class="filter-btn active" data-filter="all">Tất cả (@tongSoDanhGia)</button>
+                    @for (int sao = 5; sao >= 1; sao--)
+                    {
+                        var soLuong = thongKeSao?[sao] ?? 0;
+                        if (soLuong > 0)
+                        {
+                            <button class="filter-btn" data-filter="@sao">@sao sao (@soLuong)</button>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="no-reviews">
+                    <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                </div>
+            }
+
+            <!-- Form thêm đánh giá -->
+            <div class="add-review-section">
+                <button type="button" class="btn-write-review" id="btnWriteReview" onclick="showReviewForm()">
+                    Viết bình luận
+                </button>
+                <div class="review-form-container" id="reviewFormContainer" style="display: none;">
+                    <h6>Thêm đánh giá của bạn</h6>
+                    <form asp-action="ThemDanhGia" asp-controller="ChiTiet" asp-area="Customer" method="post" id="reviewForm">
+                        <input type="hidden" name="productId" value="@productId" />
+                        <div class="mb-3">
+                            <label class="form-label">Đánh giá sản phẩm này *</label>
+                            <div class="rating-input">
+                                <input type="radio" name="rating" value="5" id="star5"><label for="star5">⭐</label>
+                                <input type="radio" name="rating" value="4" id="star4"><label for="star4">⭐</label>
+                                <input type="radio" name="rating" value="3" id="star3"><label for="star3">⭐</label>
+                                <input type="radio" name="rating" value="2" id="star2"><label for="star2">⭐</label>
+                                <input type="radio" name="rating" value="1" id="star1"><label for="star1">⭐</label>
+                            </div>
+                            <div class="rating-text" id="ratingText" style="margin-top: 10px; font-weight: 500; color: var(--primary-green);"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Mô tả nhận xét *</label>
+                            <div class="character-count-info">
+                                <span>Ký tự còn lại <span id="charCount">2500</span></span>
+                            </div>
+                            <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Nhập mô tả tại đây" oninput="updateCharCount()" onkeyup="updateCharCount()" onpaste="setTimeout(updateCharCount, 10)" style="resize: vertical;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Thêm hình sản phẩm nếu có (tối đa 5 hình):</label>
+                            <div class="image-upload-container">
+                                <input type="file" id="imageUpload" name="images" multiple accept="image/*" style="display: none;" />
+                                <button type="button" class="btn btn-add-image" onclick="document.getElementById('imageUpload').click()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Chọn hình ảnh</span>
+                                </button>
+                                <div id="selectedImages" class="selected-images-preview"></div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline-secondary" onclick="hideReviewForm()">Huỷ bỏ</button>
+                            <button type="submit" class="btn btn-success">Gửi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Danh sách đánh giá -->
+            <div class="reviews-list" id="reviewsList">
+                @if (Model?.DanhGias != null && Model.DanhGias.Any())
+                {
+                    @foreach (var danhGia in Model.DanhGias.OrderByDescending(d => d.NgayDanhGia))
+                    {
+                        <div class="review-item" data-rating="@danhGia.SoSao">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-name">@(danhGia.TaiKhoan?.HoTen ?? "Người dùng ẩn danh")</div>
+                                    <div class="review-date">@danhGia.NgayDanhGia.ToString("dd/MM/yyyy")</div>
+                                </div>
+                                <div class="review-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= danhGia.SoSao)
+                                        {
+                                            <span class="star filled">⭐</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="star">☆</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(danhGia.BinhLuan))
+                            {
+                                <div class="review-content">
+                                    <p>@danhGia.BinhLuan</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(danhGia.AnhDanhGia))
+                            {
+                                <div class="review-images">
+                                    <img src="@danhGia.AnhDanhGia" alt="Ảnh đánh giá" class="review-photo" onclick="openImageModal(this.src)">
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-reviews-message">
+                        <p>Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</p>
+                    </div>
+                }
+            </div>
+
+            @if (Model?.DanhGias != null && Model.DanhGias.Count() > 5)
+            {
+                <!-- Load more button -->
+                <div class="load-more-reviews">
+                    <button class="btn-load-more" onclick="loadMoreReviews(@productId)">Xem thêm đánh giá</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Suggested Products Section -->
+<div class="container">
+    <div class="suggested-products-section">
+        <h2 class="suggested-title">Sản Phẩm Gợi Ý</h2>
+        <div class="suggested-products-grid">
+            @{
+                var sanPhamGoiY = ViewBag.SanPhamGoiY as List<LittleFishBeauty.Models.SanPham>;
+            }
+            @if (sanPhamGoiY != null && sanPhamGoiY.Any())
+            {
+                @foreach (var sp in sanPhamGoiY)
+                {
+                    <div class="suggested-product-card">
+                        <a href="@Url.Action("Index", "ChiTiet", new { area = "Customer", id = sp.ID_SanPham })" class="suggested-product-link">
+                            <div class="suggested-product-image">
+                                @{
+                                    var defaultImageSuggested = "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80";
+                                    var anhChinhSuggested = defaultImageSuggested;
+                                    if (sp.AnhSanPhams != null && sp.AnhSanPhams.Any())
+                                    {
+                                        var anhChinhObj = sp.AnhSanPhams.FirstOrDefault(a => a.LoaiAnh == "chinh");
+                                        if (anhChinhObj != null)
+                                        {
+                                            anhChinhSuggested = anhChinhObj.DuongDan;
+                                        }
+                                    }
+                                }
+                                <img src="@anhChinhSuggested" alt="@sp.TenSanPham">
+                            </div>
+                            <div class="suggested-product-info">
+                                <h6 class="suggested-product-name">@sp.TenSanPham</h6>
+                                <div class="suggested-product-rating">
+                                    @{
+                                        var danhGiasSp = sp.DanhGias?.Where(d => d.SoSao > 0).ToList() ?? new List<LittleFishBeauty.Models.DanhGia>();
+                                        var diemTrungBinhSp = danhGiasSp.Any() ? Math.Round(danhGiasSp.Average(d => d.SoSao), 1) : 0;
+                                        var tongSoDanhGiaSp = danhGiasSp.Count;
+                                    }
+                                    @if (diemTrungBinhSp > 0)
+                                    {
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= Math.Floor(diemTrungBinhSp))
+                                            {
+                                                <span class="star">⭐</span>
+                                            }
+                                            else if (i <= diemTrungBinhSp)
+                                            {
+                                                <span class="star">⭐</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="star">☆</span>
+                                            }
+                                        }
+                                        <span class="rating-text">(@tongSoDanhGiaSp)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="no-rating">Chưa có đánh giá</span>
+                                    }
+                                </div>
+                                <div class="suggested-product-price">
+                                    <span class="price">@sp.GiaBan.ToString("N0")₫</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-suggested-products">
+                    <p>Không có sản phẩm gợi ý nào.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal for Review Photos -->
+<div id="imageModal" class="image-modal">
+    <span class="close-modal" onclick="closeImageModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+@section Scripts {
+    <script>
+        var maxQuantity = @(Model.BienTheSanPhams.Sum(bt => bt.SoLuongTonKho));
+        var productId = @Model.ID_SanPham;
+
+        function increaseQuantity() {
+            var quantityInput = document.getElementById('productQuantity');
+            var currentValue = parseInt(quantityInput.value);
+            
+            if (currentValue < maxQuantity) {
+                quantityInput.value = currentValue + 1;
+            } else {
+                alert('Không thể chọn quá ' + maxQuantity + ' sản phẩm!');
+            }
+        }
+
+        function decreaseQuantity() {
+            var quantityInput = document.getElementById('productQuantity');
+            var currentValue = parseInt(quantityInput.value);
+            
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        }
+
+        function validateQuantity() {
+            var quantityInput = document.getElementById('productQuantity');
+            var value = parseInt(quantityInput.value);
+            
+            if (isNaN(value) || value < 1) {
+                quantityInput.value = 1;
+            } else if (value > maxQuantity) {
+                quantityInput.value = maxQuantity;
+                alert('Không thể chọn quá ' + maxQuantity + ' sản phẩm!');
+            }
+        }
+
+        function addToCart(productId) {
+            var quantity = document.getElementById('productQuantity').value;
+            
+            if (maxQuantity <= 0) {
+                alert('Sản phẩm hiện đang hết hàng!');
+                return;
+            }
+            
+            fetch('@Url.Action("ThemVaoGio", "ChiTiet", new { area = "Customer" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    quantity: parseInt(quantity)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm vào giỏ hàng thành công!');
+                    // Update cart count if needed
+                    if (data.cartCount) {
+                        var cartBadge = document.querySelector('.cart-count');
+                        if (cartBadge) {
+                            cartBadge.textContent = data.cartCount;
+                        }
+                    }
+                } else {
+                    alert('Có lỗi xảy ra: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng.');
+            });
+        }
+
+        function buyNow(productId) {
+            var quantity = document.getElementById('productQuantity').value;
+            
+            if (maxQuantity <= 0) {
+                alert('Sản phẩm hiện đang hết hàng!');
+                return;
+            }
+            
+            // Redirect to checkout with this product
+            window.location.href = '@Url.Action("MuaNgay", "ChiTiet", new { area = "Customer" })' + '?productId=' + productId + '&quantity=' + quantity;
+        }
+
+        function changeMainImage(src) {
+            document.getElementById('mainImage').src = src;
+            
+            // Update active thumbnail
+            var thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function openImageModal(src) {
+            document.getElementById('imageModal').style.display = 'block';
+            document.getElementById('modalImage').src = src;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function loadMoreReviews(productId) {
+            // Implementation for loading more reviews
+            console.log('Load more reviews for product:', productId);
+        }
+
+        function showReviewForm() {
+            document.getElementById('btnWriteReview').style.display = 'none';
+            document.getElementById('reviewFormContainer').style.display = 'block';
+        }
+
+        function hideReviewForm() {
+            document.getElementById('btnWriteReview').style.display = 'block';
+            document.getElementById('reviewFormContainer').style.display = 'none';
+            // Reset form
+            document.getElementById('reviewForm').reset();
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            var textarea = document.getElementById('comment');
+            var charCount = document.getElementById('charCount');
+            var maxLength = 2500;
+            var currentLength = textarea.value.length;
+            
+            // Đếm chính xác số ký tự thực tế
+            var actualLength = 0;
+            for (var i = 0; i < textarea.value.length; i++) {
+                actualLength++;
+            }
+            
+            // Không giới hạn tại đây, chỉ hiển thị số đếm
+            var remaining = maxLength - actualLength;
+            charCount.textContent = remaining;
+            
+            // Thay đổi màu khi gần hết ký tự
+            if (remaining < 100) {
+                charCount.style.color = '#e74c3c';
+            } else if (remaining < 300) {
+                charCount.style.color = '#f39c12';
+            } else {
+                charCount.style.color = '#666';
+            }
+        }
+
+        function updateRatingText() {
+            var ratingInputs = document.querySelectorAll('input[name="rating"]');
+            var ratingText = document.getElementById('ratingText');
+            var ratingTexts = {
+                '1': 'Rất tệ',
+                '2': 'Tệ', 
+                '3': 'Bình thường',
+                '4': 'Hài lòng',
+                '5': 'Rất hài lòng'
+            };
+            
+            ratingInputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    if (this.checked) {
+                        ratingText.textContent = ratingTexts[this.value];
+                    }
+                });
+            });
+        }
+
+        function handleImageUpload() {
+            var input = document.getElementById('imageUpload');
+            var preview = document.getElementById('selectedImages');
+            
+            input.addEventListener('change', function(e) {
+                var files = e.target.files;
+                var maxFiles = 5;
+                
+                if (files.length > maxFiles) {
+                    alert('Bạn chỉ có thể chọn tối đa ' + maxFiles + ' hình ảnh.');
+                    return;
+                }
+                
+                // Clear previous previews
+                preview.innerHTML = '';
+                
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    
+                    // Validate file type
+                    if (!file.type.startsWith('image/')) {
+                        alert('Vui lòng chỉ chọn file hình ảnh.');
+                        continue;
+                    }
+                    
+                    // Validate file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Kích thước file không được vượt quá 5MB.');
+                        continue;
+                    }
+                    
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var imageContainer = document.createElement('div');
+                        imageContainer.className = 'preview-image-container';
+                        
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        img.alt = 'Preview';
+                        
+                        var removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-image-btn';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.type = 'button';
+                        removeBtn.onclick = function() {
+                            imageContainer.remove();
+                        };
+                        
+                        imageContainer.appendChild(img);
+                        imageContainer.appendChild(removeBtn);
+                        preview.appendChild(imageContainer);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Initialize page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup click handlers for thumbnails
+            var thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(function(thumb) {
+                thumb.addEventListener('click', function() {
+                    changeMainImage(this.src);
+                });
+            });
+
+            // Setup image modal click handlers
+            var mainImage = document.getElementById('mainImage');
+            if (mainImage) {
+                mainImage.addEventListener('click', function() {
+                    openImageModal(this.src);
+                });
+            }
+
+            // Setup modal close handlers
+            var modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeImageModal();
+                    }
+                });
+            }
+
+            // Setup quantity validation
+            var quantityInput = document.getElementById('productQuantity');
+            if (quantityInput) {
+                quantityInput.addEventListener('blur', validateQuantity);
+                quantityInput.addEventListener('input', validateQuantity);
+            }
+
+            // Setup image upload handler
+            handleImageUpload();
+
+            // Setup rating text handler
+            updateRatingText();
+
+            // Setup review filter buttons
+            var filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    var filter = this.getAttribute('data-filter');
+                    var reviews = document.querySelectorAll('.review-item');
+                    
+                    reviews.forEach(function(review) {
+                        if (filter === 'all' || review.getAttribute('data-rating') === filter) {
+                            review.style.display = 'block';
+                        } else {
+                            review.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

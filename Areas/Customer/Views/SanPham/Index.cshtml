@@ -1,0 +1,361 @@
+@using LittleFishBeauty.Models
+@using System.Linq
+@using System.Collections.Generic
+@{
+    ViewData["Title"] = "Sản Phẩm - LittleFish Beauty Mỹ Phẩm Thiên Nhiên";
+    Layout = "~/Areas/Customer/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/sanpham.css" rel="stylesheet" asp-append-version="true">
+}
+
+<div class="container mt-4 pt-3">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <!-- Categories -->
+            <div class="sidebar">
+                <h5><i class="fas fa-list"></i> Danh Mục</h5>
+                <ul class="category-list">
+                    <li><a href="@Url.Action("Index", "SanPham", new { area = "Customer" })" class="@(ViewBag.CurrentCategory == null ? "active" : "")"><i class="fas fa-leaf"></i>Tất Cả Sản Phẩm</a></li>
+                    @if (ViewBag.DanhMucs != null)
+                    {
+                        @foreach (var danhMuc in ViewBag.DanhMucs as List<LittleFishBeauty.Models.DanhMuc>)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "SanPham", new { area = "Customer", category = danhMuc.DuongDanSEO })" 
+                                   class="@(ViewBag.CurrentCategory?.ID_DanhMuc == danhMuc.ID_DanhMuc ? "active" : "")">
+                                    @switch (danhMuc.ID_DanhMuc)
+                                    {
+                                        case 1: <i class="fas fa-spa"></i> break;
+                                        case 2: <i class="fas fa-palette"></i> break;
+                                        case 3: <i class="fas fa-cut"></i> break;
+                                        case 4: <i class="fas fa-sun"></i> break;
+                                        case 5: <i class="fas fa-seedling"></i> break;
+                                        case 6: <i class="fas fa-heart"></i> break;
+                                        default: <i class="fas fa-box"></i> break;
+                                    }
+                                    @danhMuc.TenDanhMuc
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-section">
+                <h6><i class="fas fa-dollar-sign"></i> Khoảng Giá</h6>
+                <form asp-action="Index" asp-controller="SanPham" asp-area="Customer" method="get">
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchQuery as string))
+                    {
+                        <input type="hidden" name="search" value="@ViewBag.SearchQuery" />
+                    }
+                    @if (ViewBag.CurrentCategory != null)
+                    {
+                        <input type="hidden" name="category" value="@(ViewBag.CurrentCategory as LittleFishBeauty.Models.DanhMuc)?.DuongDanSEO" />
+                    }
+                    @if (!string.IsNullOrEmpty(ViewBag.SortBy as string))
+                    {
+                        <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
+                    }
+                    <div class="price-range">
+                        <input type="number" class="price-input" name="minPrice" placeholder="Từ" min="0" value="@ViewBag.MinPrice">
+                        <span class="mx-2">-</span>
+                        <input type="number" class="price-input" name="maxPrice" placeholder="Đến" min="0" value="@ViewBag.MaxPrice">
+                    </div>
+                    <button type="submit" class="btn btn-outline-success btn-sm w-100 mt-2">Áp dụng</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Controls Bar -->
+            <div class="controls-bar d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="me-3">Hiển thị @(Model?.Count ?? 0) sản phẩm</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <form asp-action="Index" asp-controller="SanPham" asp-area="Customer" method="get" class="d-inline">
+                        @if (!string.IsNullOrEmpty(ViewBag.SearchQuery as string))
+                        {
+                            <input type="hidden" name="search" value="@ViewBag.SearchQuery" />
+                        }
+                        @if (ViewBag.CurrentCategory != null)
+                        {
+                            <input type="hidden" name="category" value="@(ViewBag.CurrentCategory as LittleFishBeauty.Models.DanhMuc)?.DuongDanSEO" />
+                        }
+                        @if (ViewBag.MinPrice != null)
+                        {
+                            <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                        }
+                        @if (ViewBag.MaxPrice != null)
+                        {
+                            <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+                        }
+                        <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                            <option value="">Sắp xếp theo</option>
+                            <option value="popular" selected="@(ViewBag.SortBy as string == "popular")">Phổ biến</option>
+                            <option value="newest" selected="@(ViewBag.SortBy as string == "newest")">Mới nhất</option>
+                            <option value="price-asc" selected="@(ViewBag.SortBy as string == "price-asc")">Giá thấp đến cao</option>
+                            <option value="price-desc" selected="@(ViewBag.SortBy as string == "price-desc")">Giá cao đến thấp</option>
+                            <option value="bestseller" selected="@(ViewBag.SortBy as string == "bestseller")">Bán chạy</option>
+                            <option value="rating" selected="@(ViewBag.SortBy as string == "rating")">Đánh giá cao</option>
+                        </select>
+                    </form>
+                    <div class="view-toggle">
+                        <button class="view-btn grid-view active" onclick="toggleView('grid')"><i class="fas fa-th"></i></button>
+                        <button class="view-btn list-view" onclick="toggleView('list')"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="row" id="products-container">
+                @if (Model != null && Model.Count > 0)
+                {
+                    @foreach (var sanPham in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4 product-item">
+                            <div class="product-card">
+                                <a href="@Url.Action("Index", "ChiTiet", new { area = "Customer", id = sanPham.ID_SanPham })" class="product-link">
+                                    <div class="product-image-container">
+                                        @{
+                                            var defaultImage = "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80";
+                                            var anhChinh = defaultImage;
+                                            if (sanPham.AnhSanPhams != null && sanPham.AnhSanPhams.Count > 0)
+                                            {
+                                                var anhChinhObj = (AnhSanPham)null;
+                                                foreach(var anh in sanPham.AnhSanPhams)
+                                                {
+                                                    if(anh.LoaiAnh == "chinh")
+                                                    {
+                                                        anhChinhObj = anh;
+                                                        break;
+                                                    }
+                                                }
+                                                if (anhChinhObj != null)
+                                                {
+                                                    anhChinh = anhChinhObj.DuongDan;
+                                                }
+                                            }
+                                        }
+                                        <img src="@anhChinh" class="product-image" alt="@sanPham.TenSanPham">
+                                        @* Badge chỉ hiện cho sản phẩm mới trong 24h *@
+                                        @if (sanPham.NgayTao >= DateTime.Now.AddHours(-24))
+                                        {
+                                            <span class="badge badge-new">Mới</span>
+                                        }
+                                    </div>
+                                    <div class="product-info">
+                                        <h6 class="product-name">@sanPham.TenSanPham</h6>
+                                        <p class="product-description">@(sanPham.MoTa?.Length > 80 ? sanPham.MoTa.Substring(0, 80) + "..." : sanPham.MoTa)</p>
+                                        <div class="product-rating">
+                                            @{
+                                                var diemDanhGia = sanPham.DiemDanhGia;
+                                                var soLuongDanhGia = sanPham.SoLuongDanhGia;
+                                            }
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= Math.Floor(diemDanhGia))
+                                                {
+                                                    <span class="star filled">★</span>
+                                                }
+                                                else if (i <= Math.Ceiling(diemDanhGia) && diemDanhGia % 1 != 0)
+                                                {
+                                                    <span class="star half">★</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="star">☆</span>
+                                                }
+                                            }
+                                            <span class="review-count">(@soLuongDanhGia)</span>
+                                        </div>
+                                        <div class="product-price">
+                                            <span class="current-price">@sanPham.GiaBan.ToString("N0")₫</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="product-actions">
+                                    <button class="btn btn-success btn-sm flex-fill" onclick="addToCart(@sanPham.ID_SanPham); event.stopPropagation();">
+                                        <i class="fas fa-shopping-cart me-1"></i>Thêm giỏ hàng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Không tìm thấy sản phẩm nào</h5>
+                            <p class="text-muted">Hãy thử tìm kiếm với từ khóa khác hoặc điều chỉnh bộ lọc</p>
+                            <a href="@Url.Action("Index", "SanPham", new { area = "Customer" })" class="btn btn-success">Xem tất cả sản phẩm</a>
+                        </div>
+                    </div>
+                }
+
+
+
+
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" style="display: none;">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Đang tải sản phẩm...</p>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Product pagination">
+                <ul class="pagination justify-content-center">
+                    @{
+                        var currentPage = ViewBag.CurrentPage ?? 1;
+                        var totalPages = ViewBag.TotalPages ?? 1;
+                        var totalProducts = ViewBag.TotalProducts ?? 0;
+                        
+                        // Tạo parameters cho URL để giữ lại filter
+                        var routeValues = new Dictionary<string, object>
+                        {
+                            ["area"] = "Customer"
+                        };
+                        
+                        if (!string.IsNullOrEmpty(ViewBag.CurrentSearch as string))
+                            routeValues["search"] = ViewBag.CurrentSearch;
+                        if (!string.IsNullOrEmpty(ViewBag.CurrentCategoryString as string))
+                            routeValues["category"] = ViewBag.CurrentCategoryString;
+                        if (ViewBag.CurrentMinPrice != null)
+                            routeValues["minPrice"] = ViewBag.CurrentMinPrice;
+                        if (ViewBag.CurrentMaxPrice != null)
+                            routeValues["maxPrice"] = ViewBag.CurrentMaxPrice;
+                        if (!string.IsNullOrEmpty(ViewBag.CurrentSortBy as string))
+                            routeValues["sortBy"] = ViewBag.CurrentSortBy;
+                    }
+                    
+                    <!-- Hiển thị thông tin trang -->
+                    <li class="page-info">
+                        <span class="page-link text-muted">Hiển thị @((currentPage - 1) * 12 + 1) - @(Math.Min(currentPage * 12, totalProducts)) của @totalProducts sản phẩm</span>
+                    </li>
+                    
+                    <!-- Nút Previous -->
+                    @if (currentPage > 1)
+                    {
+                        var prevRouteValues = new Dictionary<string, object>(routeValues) { ["page"] = currentPage - 1 };
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", "SanPham", prevRouteValues)">Trước</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Trước</span>
+                        </li>
+                    }
+                    
+                    <!-- Các số trang -->
+                    @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                    {
+                        var pageRouteValues = new Dictionary<string, object>(routeValues) { ["page"] = i };
+                        
+                        if (i == currentPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">@i</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "SanPham", pageRouteValues)">@i</a>
+                            </li>
+                        }
+                    }
+                    
+                    <!-- Nút Next -->
+                    @if (currentPage < totalPages)
+                    {
+                        var nextRouteValues = new Dictionary<string, object>(routeValues) { ["page"] = currentPage + 1 };
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", "SanPham", nextRouteValues)">Sau</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Sau</span>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/sanpham.js" asp-append-version="true"></script>
+    <script>
+        function addToCart(productId) {
+            // Logic thêm sản phẩm vào giỏ hàng
+            console.log('Thêm sản phẩm ' + productId + ' vào giỏ hàng');
+            // TODO: Implement AJAX call to add product to cart
+        }
+
+        // View toggle functionality
+        function toggleView(viewType) {
+            const productContainer = document.getElementById('products-container');
+            const gridBtn = document.querySelector('.view-btn.grid-view');
+            const listBtn = document.querySelector('.view-btn.list-view');
+            
+            if (viewType === 'grid') {
+                productContainer.classList.remove('list-view');
+                productContainer.classList.add('grid-view');
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+                
+                // Update product items for grid view
+                document.querySelectorAll('.product-item').forEach(item => {
+                    item.className = 'col-lg-4 col-md-6 mb-4 product-item';
+                    const card = item.querySelector('.card');
+                    if (card) {
+                        card.style.flexDirection = 'column';
+                        card.style.height = 'auto';
+                    }
+                });
+            } else if (viewType === 'list') {
+                productContainer.classList.remove('grid-view');
+                productContainer.classList.add('list-view');
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+                
+                // Update product items for list view - vertical single column
+                document.querySelectorAll('.product-item').forEach(item => {
+                    item.className = 'col-12 mb-3 product-item';
+                    const card = item.querySelector('.card');
+                    if (card) {
+                        card.style.flexDirection = 'column';
+                        card.style.height = 'auto';
+                        card.style.maxWidth = '300px';
+                        card.style.margin = '0 auto';
+                        const cardBody = card.querySelector('.card-body');
+                        if (cardBody) {
+                            cardBody.style.textAlign = 'center';
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize view toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default to grid view
+            toggleView('grid');
+        });
+    </script>
+}
