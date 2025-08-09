@@ -1,0 +1,56 @@
+@{
+ViewData["Title"] = "Sản phẩm";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageCss {
+<link rel="stylesheet" href="~/css/sanpham.css" />
+<!-- Nếu cần thêm thư viện CSS khác -->
+}
+ <header class="bg-light border-bottom py-3 mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <nav class="d-flex gap-2">
+        <a href="#" class="text-success text-decoration-none fw-bold">Trang chủ</a>
+        <a href="#" class="text-success text-decoration-none fw-bold">Giới thiệu</a>
+      </nav>
+      <div class="logo fs-3 fw-bold text-success">LITTLEFISH</div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-success rounded-circle header-btn" onclick="openSearch()">🔍</button>
+        <a href="/AreasCart/Cart/giohang" class="btn btn-success rounded-circle header-btn">👜</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="filters mb-4 d-flex flex-wrap justify-content-center gap-2">
+      <!-- Danh mục sản phẩm sẽ được render bằng JS -->
+    </div>
+    <div class="row product-grid"></div>
+  </div>
+
+  <!-- Modal Bootstrap với theme xanh tự nhiên -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="productModalLabel">Thêm vào giỏ hàng</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          <div id="customFields"></div>
+          <label for="quantity" class="form-label mt-2">Số lượng:</label>
+          <input type="number" id="quantity" value="1" min="1" class="form-control mb-2">
+        </div>
+        <div class="modal-footer">
+          <button id="btnAddToCart" class="btn btn-success rounded-pill px-4">
+            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+          </button>
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Thoát</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@section PageJs {
+<script src="~/js/sanpham.js"></script>
+<!-- Nếu cần dùng thêm thư viện JS thì thêm ở đây -->
+}

@@ -1,0 +1,561 @@
+ :root {
+      --primary-green: #2e7d32;      /* xanh lá cây tự nhiên đậm */
+      --accent-green: #4caf50;       /* xanh lá cây tự nhiên sáng */
+      --light-green: #81c784;        /* xanh lá cây nhạt */
+      --light-bg: #e8f5e8;           /* nền xanh lá tự nhiên nhạt */
+      --text-dark: #1b5e20;          /* xanh lá cây rất đậm cho chữ */
+      --hover-green: #66bb6a;        /* xanh lá hover */
+      --shadow-light: rgba(46, 125, 50, 0.12);
+      --shadow-medium: rgba(46, 125, 50, 0.25);
+      --border-green: #4caf50;       /* viền xanh tự nhiên */
+      --success-green: #43a047;      /* xanh thành công */
+      --gradient-green: linear-gradient(135deg, #2e7d32, #4caf50);
+      --gradient-light: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+      color: var(--text-dark);
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--light-green) 0%, var(--light-bg) 100%);
+      color: var(--text-dark);
+      padding: 14px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 2px solid var(--border-green);
+      position: relative;
+      box-shadow: 0 2px 10px var(--shadow-light);
+    }
+
+    /* Khắc phục lỗi căn chỉnh header */
+    header .container {
+      position: relative;
+    }
+
+    header nav {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    header .logo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+    }
+
+    header .d-flex.gap-2 {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      font-family: 'Georgia', serif;
+      letter-spacing: 1px;
+      color: var(--primary-green);
+      text-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .nav-left nav,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: absolute;
+    }
+
+    .nav-left nav {
+      left: 40px;
+    }
+
+    .nav-right {
+      right: 40px;
+    }
+
+    nav a {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    nav a:hover {
+      color: white;
+      background: var(--hover-green);
+      transform: translateY(-2px);
+    }
+
+    .icon-circle {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--shadow-medium);
+      transition: all 0.3s;
+      border: 2px solid var(--light-green);
+    }
+
+    .icon-circle:hover {
+      background: linear-gradient(135deg, var(--hover-green), var(--light-green));
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px var(--shadow-medium);
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    .filters button {
+      background: white;
+      border: 2px solid var(--accent-green);
+      color: var(--primary-green);
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .filters button.active,
+    .filters button:hover {
+      background: linear-gradient(135deg, var(--accent-green), var(--hover-green));
+      color: white;
+      border-color: var(--primary-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--shadow-medium);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      padding: 0 40px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,255,248,0.8)) !important;
+      border: 2px solid rgba(129, 199, 132, 0.3) !important;
+      border-radius: 18px !important;
+      padding: 20px !important;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.1) !important;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-green);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .product-card:hover {
+      border-color: var(--accent-green) !important;
+      transform: translateY(-8px) scale(1.02) !important;
+      box-shadow: 0 20px 40px rgba(46, 125, 50, 0.2) !important;
+      background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(240,255,240,0.9)) !important;
+    }
+
+    .product-card .btn {
+      transition: all 0.3s ease !important;
+      font-size: 0.85rem !important;
+      padding: 8px 16px !important;
+    }
+
+    /* Modal Styling */
+    .modal-backdrop {
+      background: rgba(46, 125, 50, 0.25) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-dialog {
+      max-width: 480px !important;
+      margin: 2rem auto !important;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(240,255,240,0.95)) !important;
+      border: 3px solid var(--accent-green) !important;
+      border-radius: 24px !important;
+      box-shadow: 0 25px 80px rgba(46, 125, 50, 0.3) !important;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+    }
+
+    .modal-header {
+      background: var(--gradient-green) !important;
+      color: white !important;
+      border-bottom: none !important;
+      padding: 24px 28px !important;
+      border-radius: 21px 21px 0 0 !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .modal-title {
+      color: white !important;
+      font-weight: 700 !important;
+      font-size: 1.4rem !important;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title::before {
+      content: '🛒';
+      font-size: 1.2rem;
+    }
+
+    .btn-close {
+      background: rgba(255,255,255,0.2) !important;
+      border: 2px solid rgba(255,255,255,0.3) !important;
+      border-radius: 50% !important;
+      width: 38px !important;
+      height: 38px !important;
+      opacity: 0.9 !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(5px);
+    }
+
+    .btn-close:hover {
+      background: rgba(255,255,255,0.35) !important;
+      border-color: rgba(255,255,255,0.5) !important;
+      opacity: 1 !important;
+      transform: rotate(90deg) scale(1.1);
+    }
+
+    .modal-body {
+      padding: 28px !important;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(248,255,248,0.6));
+    }
+
+    .modal-footer {
+      background: var(--gradient-light) !important;
+      border-top: 2px solid rgba(76, 175, 80, 0.15) !important;
+      padding: 24px 28px !important;
+      border-radius: 0 0 21px 21px !important;
+      gap: 15px;
+      justify-content: center !important;
+    }
+
+    /* Cải thiện Form Controls trong modal thanh toán */
+    .form-label {
+      color: var(--primary-green) !important;
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+      margin-bottom: 10px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-label::before {
+      content: '🌿';
+      font-size: 0.9rem;
+    }
+
+    .form-select,
+    .form-control {
+      border: 3px solid var(--light-green) !important;
+      border-radius: 15px !important;
+      padding: 15px 18px !important;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(240,255,240,0.8)) !important;
+      color: var(--text-dark) !important;
+      font-weight: 600 !important;
+      font-size: 1rem !important;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.1) !important;
+      margin-bottom: 16px !important;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+      outline: none !important;
+      border-color: var(--primary-green) !important;
+      box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.2), 0 8px 25px rgba(46, 125, 50, 0.25) !important;
+      background: rgba(255,255,255,0.98) !important;
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .form-select:hover,
+    .form-control:hover {
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.15) !important;
+      transform: translateY(-1px);
+    }
+
+    /* Cải thiện các nút trong modal thanh toán */
+    #btnAddToCart {
+      background: var(--gradient-green) !important;
+      border: none !important;
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4) !important;
+      padding: 15px 32px !important;
+      font-size: 1.1rem !important;
+      font-weight: 700 !important;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 180px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    #btnAddToCart:hover {
+      background: linear-gradient(135deg, var(--success-green), var(--hover-green)) !important;
+      transform: translateY(-3px) scale(1.05) !important;
+      box-shadow: 0 10px 35px rgba(46, 125, 50, 0.5) !important;
+    }
+
+    #btnAddToCart:active {
+      transform: translateY(-1px) scale(0.98) !important;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3) !important;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #757575, #9e9e9e) !important;
+      border: none !important;
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(117, 117, 117, 0.3) !important;
+      padding: 15px 28px !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 120px;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #616161, #757575) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 8px 25px rgba(117, 117, 117, 0.4) !important;
+    }
+
+    /* Enhanced Buttons */
+    .btn {
+      font-weight: 600 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-success {
+      background: var(--gradient-green) !important;
+      border: none !important;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3) !important;
+      padding: 12px 24px !important;
+      font-size: 0.95rem !important;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, var(--success-green), var(--hover-green)) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4) !important;
+    }
+
+    .btn-success:active {
+      transform: translateY(0) scale(0.98) !important;
+      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3) !important;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d, #8a8a8a) !important;
+      border: none !important;
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+      padding: 12px 24px !important;
+      font-size: 0.95rem !important;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #5a6268, #6c757d) !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4) !important;
+    }
+
+    .btn-outline-success {
+      color: var(--primary-green) !important;
+      border: 2px solid var(--accent-green) !important;
+      background: rgba(255,255,255,0.8) !important;
+      font-weight: 600 !important;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1) !important;
+    }
+    
+    .btn-outline-success:hover {
+      background: var(--gradient-green) !important;
+      border-color: var(--primary-green) !important;
+      color: white !important;
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.3) !important;
+    }
+
+    .btn-outline-success.active {
+      background: var(--gradient-green) !important;
+      border-color: var(--primary-green) !important;
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4) !important;
+    }
+
+    .rounded-pill {
+      border-radius: 25px !important;
+    }
+
+    .rounded-circle {
+      border-radius: 50% !important;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .rounded-circle:hover {
+      transform: translateY(-3px) scale(1.1) !important;
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4) !important;
+    }
+
+    /* Enhanced Filter Buttons */
+    .filters .btn {
+      margin: 4px;
+      padding: 10px 20px !important;
+      border-radius: 20px !important;
+      font-size: 0.9rem !important;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.15) !important;
+      backdrop-filter: blur(5px);
+    }
+
+    .filters .btn:hover {
+      transform: translateY(-2px) !important;
+    }
+
+    /* Input Number Styling */
+    input[type="number"] {
+      -moz-appearance: textfield;
+      -webkit-appearance: none;
+      appearance: none;}
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+       /* Animation for form elements */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-body > * {
+      animation: fadeInUp 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    .modal-body > *:nth-child(1) { animation-delay: 0s; }
+    .modal-body > *:nth-child(2) { animation-delay: 0.1s; }
+    .modal-body > *:nth-child(3) { animation-delay: 0.2s; }
+    .modal-body > *:nth-child(4) { animation-delay: 0.3s; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+        padding: 0 20px 40px;
+      }
+      
+      .filters {
+        margin: 20px 0;
+        gap: 8px;
+      }
+      
+      .filters .btn {
+        padding: 8px 16px !important;
+        font-size: 0.8rem !important;
+      }
+    }

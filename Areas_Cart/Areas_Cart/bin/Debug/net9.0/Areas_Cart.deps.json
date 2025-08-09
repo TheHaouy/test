@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Areas_Cart/1.0.0": {
+        "runtime": {
+          "Areas_Cart.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Areas_Cart/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
